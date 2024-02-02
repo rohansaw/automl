@@ -615,6 +615,12 @@ class ServingDriver(object):
     tf.io.gfile.GFile(pb_path, 'wb').write(graphdef.SerializeToString())
     logging.info('Frozen graph saved at %s', pb_path)
 
+    #TODO: Adapt to use actual representative dataset
+    def representative_dataset():
+      for _ in range(100):
+        data = np.random.rand(1, 1024, 1024, 3)
+        yield [data.astype(np.uint8)]
+
     if tflite_path:
       height, width = utils.parse_image_size(self.params['image_size'])
       input_name = signitures['image_arrays'].op.name
@@ -624,7 +630,10 @@ class ServingDriver(object):
           input_arrays=[input_name],
           input_shapes=input_shapes,
           output_arrays=[signitures['prediction'].op.name])
-      converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS]
+      converter.representative_dataset = representative_data_gen
+      converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+      converter.inference_input_type = tf.uint8
+      converter.inference_output_type = tf.uint8
       tflite_model = converter.convert()
 
       tf.io.gfile.GFile(tflite_path, 'wb').write(tflite_model)
