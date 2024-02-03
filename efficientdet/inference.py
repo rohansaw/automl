@@ -630,7 +630,7 @@ class ServingDriver(object):
           input_arrays=[input_name],
           input_shapes=input_shapes,
           output_arrays=[signitures['prediction'].op.name])
-      converter.representative_dataset = representative_data_gen
+      converter.representative_dataset = representative_dataset
       converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
       converter.inference_input_type = tf.uint8
       converter.inference_output_type = tf.uint8
