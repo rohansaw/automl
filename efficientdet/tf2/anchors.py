@@ -120,7 +120,7 @@ class Anchors():
     feat_sizes = self.feat_sizes
     for level in range(self.min_level, self.max_level + 1):
       anchor_configs[level] = []
-      for scale_octave in [0.3, 0.6. 0.9]:
+      for scale_octave in [0.3, 0.6, 0.9]:
         for aspect in self.aspect_ratios:
           anchor_configs[level].append(
               ((feat_sizes[0]['height'] / float(feat_sizes[level]['height']),
