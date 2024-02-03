@@ -631,7 +631,7 @@ class ServingDriver(object):
         input_shapes=input_shapes,
         output_arrays=[signitures['prediction'].op.name])
       converter.representative_dataset = representative_dataset
-      converter.quantized_input_stats =  {input_name: ([108.7065, 123.8279, 114.9285], [41.769, 38.6325, 44.7525])} 
+      converter.quantized_input_stats =  {input_arrays[0] : (0., 1.)}
       converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
       converter.inference_input_type = tf.int8
       converter.inference_output_type = tf.int8
