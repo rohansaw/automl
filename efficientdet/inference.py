@@ -625,15 +625,11 @@ class ServingDriver(object):
       height, width = utils.parse_image_size(self.params['image_size'])
       input_name = signitures['image_arrays'].op.name
       input_shapes = {input_name: [None, height, width, 3]}
-      converter = tf.lite.TFLiteConverter.from_saved_model(
-          output_dir,
-          input_arrays=[input_name],
-          input_shapes=input_shapes,
-          output_arrays=[signitures['prediction'].op.name])
+      converter = tf.lite.TFLiteConverter.from_saved_model(output_dir)
       converter.representative_dataset = representative_dataset
       converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
-      converter.inference_input_type = tf.uint8
-      converter.inference_output_type = tf.uint8
+      converter.inference_input_type = tf.int8
+      converter.inference_output_type = tf.int8
       tflite_model = converter.convert()
 
       tf.io.gfile.GFile(tflite_path, 'wb').write(tflite_model)
